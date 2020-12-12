@@ -48,7 +48,7 @@ func partTwo(passwords [][]string) int {
 func main() {
   log.SetFlags(0)
 
-  // Read the input expense report from a file.
+  // Read the input passwords from a file.
   lines, err := utils.ReadLines("input.txt")
   if err != nil {
     log.Fatalf("utils.ReadFile: %s", err)
