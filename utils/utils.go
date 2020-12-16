@@ -21,3 +21,33 @@ func ReadLines(path string) ([]string, error) {
 
   return lines, scanner.Err()
 }
+
+// ReadChunks returns chunks of text seperated by blank lines in an input file
+// as a string slice.
+func ReadChunks(path string) ([]string, error) {
+  lines, err := ReadLines(path)
+  if err != nil {
+    return nil, err
+  }
+  chunks := []string{}
+  i := 0
+  chunk := ""
+  for {
+    if i >= len(lines) {
+      chunks = append(chunks, chunk)
+      break
+    }
+    if lines[i] == "" {
+      chunks = append(chunks, chunk)
+      chunk = ""
+    } else {
+      if chunk == "" {
+        chunk = chunk + lines[i]
+      } else {
+        chunk = chunk + " " + lines[i]
+      }
+    }
+    i++
+  }
+  return chunks, nil
+}
