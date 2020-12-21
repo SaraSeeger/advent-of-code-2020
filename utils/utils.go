@@ -51,3 +51,53 @@ func ReadChunks(path string) ([]string, error) {
   }
   return chunks, nil
 }
+
+// ReadChunksNoSpace is just like ReadChunks, but doesn't add a space between lines.
+func ReadChunksNoSpace(path string) ([]string, error) {
+  lines, err := ReadLines(path)
+  if err != nil {
+    return nil, err
+  }
+  chunks := []string{}
+  i := 0
+  chunk := ""
+  for {
+    if i >= len(lines) {
+      chunks = append(chunks, chunk)
+      break
+    }
+    if lines[i] == "" {
+      chunks = append(chunks, chunk)
+      chunk = ""
+    } else {
+      chunk = chunk + lines[i]
+    }
+    i++
+  }
+  return chunks, nil
+}
+
+// ReadChunksNoSpace is just like ReadChunks, but doesn't add a space between lines.
+func ReadLinesInChunks(path string) ([][]string, error) {
+  lines, err := ReadLines(path)
+  if err != nil {
+    return nil, err
+  }
+  chunks := [][]string{}
+  i := 0
+  chunk := []string{}
+  for {
+    if i >= len(lines) {
+      chunks = append(chunks, chunk)
+      break
+    }
+    if lines[i] == "" {
+      chunks = append(chunks, chunk)
+      chunk = []string{}
+    } else {
+      chunk = append(chunk, lines[i])
+    }
+    i++
+  }
+  return chunks, nil
+}
