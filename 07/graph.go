@@ -14,7 +14,7 @@ type Graph struct {
 }
 
 type Edge struct {
-  Weight float64
+  Weight int
 }
 
 // FindUniqueDecendents returns a count of the number of unique decendednts of
@@ -22,9 +22,8 @@ type Edge struct {
 func (g *Graph) CountUniqueDecendents(node ID) (int, error) {
   if !g.Nodes[node] {
     return 0, errors.New(fmt.Sprintf("Node %q does not exist in the graph", node))
-  } else {
-    return g.countUniqueDecendentsRecursively(node, map[ID]bool{}) - 1, nil
   }
+  return g.countUniqueDecendentsRecursively(node, map[ID]bool{}) - 1, nil
 }
 
 func (g *Graph) countUniqueDecendentsRecursively(node ID, visited map[ID]bool) int {
@@ -41,6 +40,21 @@ func (g *Graph) countUniqueDecendentsRecursively(node ID, visited map[ID]bool) i
     }
   }
   return numDecendents
+}
+
+// TotalDecendentWeight returns the total number of weighted nodes decended
+// from the input node. This can loop forever if there are cycles in the graph.
+func (g *Graph) TotalDecendentWeight(node ID) int {
+  // Base Case:
+  if g.Edges[node] == nil || len(g.Edges[node]) == 0 {
+    return 0
+  }
+  // Recursive Case:
+  totalDecendents := 0
+  for id, edge := range g.Edges[node] {
+    totalDecendents += edge.Weight + (edge.Weight * g.TotalDecendentWeight(id))
+  }
+  return totalDecendents
 }
 
 func NewGraph() *Graph {
